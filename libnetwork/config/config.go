@@ -40,6 +40,7 @@ type DaemonCfg struct {
 	DriverCfg              map[string]interface{}
 	ClusterProvider        cluster.Provider
 	NetworkControlPlaneMTU int
+	DefaultMTU             int
 	DefaultAddressPool     []*ipamutils.NetworkToSplit
 }
 
@@ -158,6 +159,14 @@ func OptionExperimental(exp bool) Option {
 	return func(c *Config) {
 		logrus.Debugf("Option Experimental: %v", exp)
 		c.Daemon.Experimental = exp
+	}
+}
+
+// OptionNetworkMTU function returns an option setter for default bridge MTU
+func OptionNetworkMTU(exp int) Option {
+	return func(c *Config) {
+		logrus.Debugf("Default MTU for new networks: %d", exp)
+		c.Daemon.DefaultMTU = exp
 	}
 }
 

@@ -1388,6 +1388,8 @@ func (daemon *Daemon) networkOptions(pg plugingetter.PluginGetter, activeSandbox
 		options = append(options, nwconfig.OptionPluginGetter(pg))
 	}
 
+	options = append(options, nwconfig.OptionNetworkMTU(conf.NetworkDefaultMTU))
+
 	return options, nil
 }
 

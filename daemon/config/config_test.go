@@ -251,6 +251,17 @@ func TestValidateConfigurationErrors(t *testing.T) {
 			expectedErr: "123456 is not a valid domain",
 		},
 		{
+			name: "negative default network MTU",
+			config: &Config{
+				CommonConfig: CommonConfig{
+					NetworkConfig: NetworkConfig{
+						NetworkDefaultMTU: -10,
+					},
+				},
+			},
+			expectedErr: "invalid network default MTU: -10",
+		},
+		{
 			name: "negative MTU",
 			config: &Config{
 				CommonConfig: CommonConfig{

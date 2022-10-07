@@ -658,6 +658,15 @@ func (c *controller) NewNetwork(networkType, name string, id string, options ...
 		return nil, err
 	}
 
+	// Apply the default network MTU if none is provided
+	switch network.generic[netlabel.GenericData].(type) {
+	case map[string]string:
+		genericData := network.generic[netlabel.GenericData].(map[string]string)
+		if _, ok := genericData[netlabel.DriverMTU]; !ok {
+			genericData[netlabel.DriverMTU] = fmt.Sprintf("%d", c.cfg.Daemon.DefaultMTU)
+		}
+	}
+
 	// Reset network types, force local scope and skip allocation and
 	// plumbing for configuration networks. Reset of the config-only
 	// network drivers is needed so that this special network is not

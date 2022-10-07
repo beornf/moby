@@ -122,6 +122,8 @@ type NetworkConfig struct {
 	DefaultAddressPools opts.PoolsOpt `json:"default-address-pools,omitempty"`
 	// NetworkControlPlaneMTU allows to specify the control plane MTU, this will allow to optimize the network use in some components
 	NetworkControlPlaneMTU int `json:"network-control-plane-mtu,omitempty"`
+	// NetworkDefaultMTU allows to specify the default MTU for newly created networks
+	NetworkDefaultMTU int `json:"network-default-mtu,omitempty"`
 }
 
 // CommonTLSOptions defines TLS configuration for the daemon server.
@@ -308,6 +310,7 @@ func New() *Config {
 			Mtu:                    DefaultNetworkMtu,
 			NetworkConfig: NetworkConfig{
 				NetworkControlPlaneMTU: DefaultNetworkMtu,
+				NetworkDefaultMTU:      DefaultNetworkMtu,
 			},
 			ContainerdNamespace:       DefaultContainersNamespace,
 			ContainerdPluginNamespace: DefaultPluginNamespace,
@@ -607,6 +610,9 @@ func Validate(config *Config) error {
 	// TODO(thaJeztah) Validations below should not accept "0" to be valid; see Validate() for a more in-depth description of this problem
 	if config.Mtu < 0 {
 		return fmt.Errorf("invalid default MTU: %d", config.Mtu)
+	}
+	if config.NetworkDefaultMTU < 0 {
+		return fmt.Errorf("invalid network default MTU: %d", config.NetworkDefaultMTU)
 	}
 	if config.MaxConcurrentDownloads < 0 {
 		return fmt.Errorf("invalid max concurrent downloads: %d", config.MaxConcurrentDownloads)
