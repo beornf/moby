@@ -225,3 +225,5 @@ require (
 	sigs.k8s.io/yaml v1.3.0 // indirect
 	tags.cncf.io/container-device-interface/specs-go v0.6.0 // indirect
 )
+
+replace github.com/moby/swarmkit/v2 => github.com/beornf/swarmkit/v2 v2.0.0-20240628042601-2c5297fc233b
