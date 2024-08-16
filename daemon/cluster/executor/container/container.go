@@ -277,8 +277,7 @@ func (c *containerConfig) mounts(deps exec.VolumeGetter) []enginemount.Mount {
 func (c *containerConfig) convertCSIMount(m api.Mount, deps exec.VolumeGetter) enginemount.Mount {
 	var mount enginemount.Mount
 
-	// these are actually bind mounts
-	mount.Type = enginemount.TypeBind
+	mount.Type = enginemount.TypeCluster
 
 	for _, attach := range c.task.Volumes {
 		if attach.Source == m.Source && attach.Target == m.Target {

@@ -300,6 +300,10 @@ func (p *windowsParser) validateMountConfigReg(mnt *mount.Mount, additionalValid
 		if windowsDetectMountType(mnt.Target) != mount.TypeNamedPipe {
 			return &errMountConfig{mnt, fmt.Errorf("'%s' is not a valid pipe path", mnt.Target)}
 		}
+	case mount.TypeCluster:
+		if len(mnt.Source) == 0 {
+			return &errMountConfig{mnt, errMissingField("Source")}
+		}
 	default:
 		return &errMountConfig{mnt, errors.New("mount type unknown")}
 	}
@@ -412,6 +416,9 @@ func (p *windowsParser) parseMountSpec(cfg mount.Mount, convertTargetToBackslash
 		mp.Source = strings.ReplaceAll(cfg.Source, `/`, `\`)
 	case mount.TypeNamedPipe:
 		mp.Source = strings.ReplaceAll(cfg.Source, `/`, `\`)
+	case mount.TypeCluster:
+		mp.Source = strings.ReplaceAll(cfg.Source, `/`, `\`)
+		mp.CopyData = p.DefaultCopyMode()
 	}
 	// cleanup trailing `\` except for paths like `c:\`
 	if len(mp.Source) > 3 && mp.Source[len(mp.Source)-1] == '\\' {

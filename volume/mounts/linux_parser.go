@@ -120,6 +120,10 @@ func (p *linuxParser) validateMountConfigImpl(mnt *mount.Mount, validateBindSour
 		if _, err := p.ConvertTmpfsOptions(mnt.TmpfsOptions, mnt.ReadOnly); err != nil {
 			return &errMountConfig{mnt, err}
 		}
+	case mount.TypeCluster:
+		if len(mnt.Source) == 0 {
+			return &errMountConfig{mnt, errMissingField("Source")}
+		}
 	default:
 		return &errMountConfig{mnt, errors.New("mount type unknown")}
 	}
@@ -329,6 +333,9 @@ func (p *linuxParser) parseMountSpec(cfg mount.Mount, validateBindSourceExists b
 			// default propagation mode.
 			mp.Propagation = linuxDefaultPropagationMode
 		}
+	case mount.TypeCluster:
+		mp.Source = path.Clean(filepath.ToSlash(cfg.Source))
+		mp.CopyData = p.DefaultCopyMode()
 	case mount.TypeTmpfs:
 		// NOP
 	}

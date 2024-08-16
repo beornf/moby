@@ -81,11 +81,11 @@ func (daemon *Daemon) createContainerOSSpecificSettings(ctx context.Context, con
 // this is only called when the container is created.
 func (daemon *Daemon) populateVolumes(ctx context.Context, c *container.Container) error {
 	for _, mnt := range c.MountPoints {
-		if mnt.Volume == nil {
+		if !mnt.CopyData {
 			continue
 		}
 
-		if mnt.Type != mounttypes.TypeVolume || !mnt.CopyData {
+		if (mnt.Volume == nil || mnt.Type != mounttypes.TypeVolume) && mnt.Type != mounttypes.TypeCluster {
 			continue
 		}
 
